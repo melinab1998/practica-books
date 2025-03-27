@@ -1,7 +1,7 @@
 import React, { useState } from "react"; 
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Badge } from "react-bootstrap";
 
-const BookItem = ({ bookTitle, author, rating, pages, imageUrl }) => {
+const BookItem = ({ bookTitle, author, rating, pages, imageUrl, available }) => {
 
     const [title, setTitle] = useState(bookTitle);
 
@@ -17,9 +17,14 @@ const BookItem = ({ bookTitle, author, rating, pages, imageUrl }) => {
                 src={imageUrl !== "" ? imageUrl : "https://bit.ly/47NylZk"}
             />
             <Card.Body>
+                <div className="mb-2">
+                
+                {available? <Badge bg="success">Disponible</Badge>:<Badge bg="danger">Reservado</Badge>}
+
+                </div>
                 <Card.Title>{title}</Card.Title> 
                 <Card.Subtitle>{author}</Card.Subtitle>
-                <div>{rating} estrellas</div>
+                <div>{"★".repeat(rating)} estrellas</div>
                 <p>{pages} páginas</p>
                 <Button onClick={handleTitle}>Actualizar Título</Button>
             </Card.Body>

@@ -1,11 +1,12 @@
-import booksInitials from "./data/data"
+import booksInitials from "./data/Data"
 import Books from "./components/books/Books"
 import NewBook from "./components/newBook/NewBook"
 import { useState } from "react";
 
 function App() {
 
-  const [books, setBooks] = useState(booksInitials);
+  const [bookList, setBookList] = useState(booksInitials);
+
 
   const handleBookAdded = (enteredBook) => {
     const bookData = {
@@ -13,7 +14,7 @@ function App() {
       id: Math.random()
     }
 
-    console.log(bookData);
+    setBookList(prevBookList => [bookData, ...prevBookList])
   }
 
   return (
@@ -22,7 +23,7 @@ function App() {
         <h2>Book champions app</h2>
         <p>¡Quiero leer libros!</p>
         <NewBook onBookAdded={handleBookAdded}/>
-        <Books books={books}/>
+        <Books books={bookList}/>
       </div>
     </>
   );
