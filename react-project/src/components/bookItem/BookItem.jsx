@@ -10,7 +10,7 @@ const BookItem = ({ bookTitle, author, rating, pages, imageUrl }) => {
     };
 
     return (
-        <Card style={{ width: "22rem" }}>
+        <Card style={{ width: "22rem" }} className="mx-3">
             <Card.Img
                 height={400}
                 variant="top"

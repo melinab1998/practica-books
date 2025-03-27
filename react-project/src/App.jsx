@@ -1,20 +1,29 @@
-import BookItem from "./components/bookItem/BookItem";
-import books from "./data/data";
+import booksInitials from "./data/data"
+import Books from "./components/books/Books"
+import NewBook from "./components/newBook/NewBook"
+import { useState } from "react";
+
 function App() {
+
+  const [books, setBooks] = useState(booksInitials);
+
+  const handleBookAdded = (enteredBook) => {
+    const bookData = {
+      ...enteredBook,
+      id: Math.random()
+    }
+
+    console.log(bookData);
+  }
+
   return (
     <>
-      <h2>Book champions app</h2>
-      <p>¡Quiero leer libros!</p>
-      {books.map((book, index) => (
-        <BookItem
-          key={index}
-          bookTitle={book.bookTitle}
-          author={book.bookAuthor}
-          rating={book.bookRating}
-          pages={book.pageCount}
-          imageUrl={book.imageUrl}
-        />
-      ))}
+      <div className="d-flex flex-column align-items-center">
+        <h2>Book champions app</h2>
+        <p>¡Quiero leer libros!</p>
+        <NewBook onBookAdded={handleBookAdded}/>
+        <Books books={books}/>
+      </div>
     </>
   );
 }
