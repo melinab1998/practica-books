@@ -2,7 +2,6 @@ import booksInitials from "./data/Data"
 import Books from "./components/books/Books"
 import NewBook from "./components/newBook/NewBook"
 import { useState } from "react";
-
 function App() {
 
   const [bookList, setBookList] = useState(booksInitials);
