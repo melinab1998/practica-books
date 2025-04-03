@@ -1,5 +1,6 @@
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import { Card, Button, Badge } from "react-bootstrap";
+import { StarFill, Star } from "react-bootstrap-icons";
 
 const BookItem = ({ bookTitle, author, rating, pages, imageUrl, available }) => {
 
@@ -8,6 +9,8 @@ const BookItem = ({ bookTitle, author, rating, pages, imageUrl, available }) => 
     const handleTitle = () => {
         setTitle("Título Actualizado!");
     };
+
+    const maxStars = 5;
 
     return (
         <Card style={{ width: "22rem" }} className="mx-3">
@@ -18,13 +21,23 @@ const BookItem = ({ bookTitle, author, rating, pages, imageUrl, available }) => 
             />
             <Card.Body>
                 <div className="mb-2">
-                
-                {available? <Badge bg="success">Disponible</Badge>:<Badge bg="danger">Reservado</Badge>}
+
+                    {available ? <Badge bg="success">Disponible</Badge> : <Badge bg="danger">Reservado</Badge>}
 
                 </div>
-                <Card.Title>{title}</Card.Title> 
+                <Card.Title>{title}</Card.Title>
                 <Card.Subtitle>{author}</Card.Subtitle>
-                <div>{"★".repeat(rating)} estrellas</div>
+                <div>
+                    <div>
+                        {Array.from({ length: maxStars }, (_, i) =>
+                            i < rating ? (
+                                <StarFill key={i} color="gold" />
+                            ) : (
+                                <Star key={i} color="gray" />
+                            )
+                        )}
+                    </div>
+                </div>
                 <p>{pages} páginas</p>
                 <Button onClick={handleTitle}>Actualizar Título</Button>
             </Card.Body>
