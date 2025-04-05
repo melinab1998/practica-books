@@ -16,12 +16,14 @@ const Books = ({ books, onDeleteBook }) => {
         {filteredBooks.map((book) => (
           <BookItem
             key={book.id}
+            id={book.id}
             bookTitle={book.title}
             author={book.author}
             rating={book.rating}
             pages={book.pageCount}
             imageUrl={book.imageUrl}
             available={book.available}
+            summary={book.summary} 
             onDelete={() => onDeleteBook(book.id)}
           />
         ))}

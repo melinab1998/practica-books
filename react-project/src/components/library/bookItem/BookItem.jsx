@@ -1,23 +1,51 @@
 import React, { useState } from "react";
 import { Card, Button, Badge } from "react-bootstrap";
 import { StarFill, Star } from "react-bootstrap-icons";
-import ConfirmDeleteModal from "../../ui/ConfirmDeleteModal/ConfirmDeleteModal"
+import ConfirmDeleteModal from "../../ui/ConfirmDeleteModal/ConfirmDeleteModal";
+import { useNavigate } from "react-router-dom";
 
-const BookItem = ({ bookTitle, author, rating, pages, imageUrl, available, onDelete }) => {
+const BookItem = ({
+    id,
+    bookTitle,
+    author,
+    rating,
+    pages,
+    imageUrl,
+    available,
+    summary,
+    onDelete
+}) => {
     const [title, setTitle] = useState(bookTitle);
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+    const maxStars = 5;
 
     const handleTitle = () => setTitle("Título Actualizado!");
-    const maxStars = 5;
 
     const handleDelete = () => {
         onDelete();
         setShowModal(false);
     };
 
+    const handleClick = () => {
+        navigate(`${id}`, {
+            state: {
+                book: {
+                    title,
+                    author,
+                    rating,
+                    pageCount: pages,
+                    summary,
+                    imageUrl,
+                    available
+                }
+            }
+        });
+    };
+
     return (
         <>
-            <Card style={{ width: "22rem" }} className="mx-3">
+            <Card style={{ width: "22rem" }} className="mx-3 mb-4">
                 <Card.Img
                     height={400}
                     variant="top"
@@ -43,10 +71,14 @@ const BookItem = ({ bookTitle, author, rating, pages, imageUrl, available, onDel
                         )}
                     </div>
                     <p>{pages} páginas</p>
-                    <Button className="me-2" onClick={handleTitle}>
+
+                    {/*<Button className="me-2" onClick={handleTitle}>
                         Actualizar Título
+                    </Button>*/}
+                    <Button variant="primary" onClick={handleClick}>
+                        Seleccionar libro
                     </Button>
-                    <Button variant="danger" onClick={() => setShowModal(true)}>
+                    <Button variant="danger" className="me-2" onClick={() => setShowModal(true)}>
                         Eliminar
                     </Button>
                 </Card.Body>

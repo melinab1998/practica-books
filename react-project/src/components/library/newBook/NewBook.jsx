@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-const NewBook = ({onBookAdded}) => {
+const NewBook = ({ onBookAdded }) => {
+    const navigate = useNavigate();
 
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
@@ -10,33 +12,14 @@ const NewBook = ({onBookAdded}) => {
     const [imageUrl, setImageUrl] = useState("");
     const [available, setAvailable] = useState(false);
 
-    const handleChangeTitle = (event) => {
-        setTitle(event.target.value);
-    }
-
-    const handleAuthorChange = (event) => {
-        setAuthor(event.target.value);
-    }
-
-
-    const handleRatingChange = (event) => {
-        setRating(event.target.value);
-    }
-
-    const handlePageCountChange = (event) => {
-        setPageCount(event.target.value);
-    }
-
-    const handleImageUrlChange = (event) => {
-        setImageUrl(event.target.value);
-    }
-
-    const handleAvailabilityChange = (event) => {
-        setAvailable(event.target.checked);
-    }
+    const handleChangeTitle = (event) => setTitle(event.target.value);
+    const handleAuthorChange = (event) => setAuthor(event.target.value);
+    const handleRatingChange = (event) => setRating(event.target.value);
+    const handlePageCountChange = (event) => setPageCount(event.target.value);
+    const handleImageUrlChange = (event) => setImageUrl(event.target.value);
+    const handleAvailabilityChange = (event) => setAvailable(event.target.checked);
 
     const handleAddBook = (event) => {
-
         event.preventDefault();
 
         const bookData = {
@@ -45,12 +28,13 @@ const NewBook = ({onBookAdded}) => {
             rating: parseInt(rating, 10),
             pageCount: parseInt(pageCount, 10),
             imageUrl,
-            available
+            available,
         };
 
-        console.log(bookData)
+        console.log(bookData);
 
         onBookAdded(bookData);
+
         setTitle("");
         setAuthor("");
         setRating("");
@@ -58,8 +42,12 @@ const NewBook = ({onBookAdded}) => {
         setImageUrl("");
         setAvailable(false);
 
-    }
+        navigate("/library", { replace: true });
+    };
 
+    const handleBack = () => {
+        navigate("/library", { replace: true });
+    };
 
     return (
         <Card className="m-4 w-50" bg="success">
@@ -69,13 +57,13 @@ const NewBook = ({onBookAdded}) => {
                         <Col md={6}>
                             <Form.Group className="mb-3" controlId="title">
                                 <Form.Label>Título</Form.Label>
-                                <Form.Control type="text" placeholder="Ingresar título" onChange={handleChangeTitle} value={title}/>
+                                <Form.Control type="text" placeholder="Ingresar título" onChange={handleChangeTitle} value={title} />
                             </Form.Group>
                         </Col>
                         <Col md={6}>
                             <Form.Group className="mb-3" controlId="author">
                                 <Form.Label>Autor</Form.Label>
-                                <Form.Control type="text" placeholder="Ingresar autor" onChange={handleAuthorChange} value={author}/>
+                                <Form.Control type="text" placeholder="Ingresar autor" onChange={handleAuthorChange} value={author} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -106,13 +94,18 @@ const NewBook = ({onBookAdded}) => {
                             </Form.Group>
                         </Col>
                     </Row>
-                    <Row className="justify-content-between">
+                    <Row>
                         <Form.Group className="mb-3" controlId="imageUrl">
                             <Form.Label>URL de imagen</Form.Label>
-                            <Form.Control type="text" placeholder="Ingresar url de imagen" onChange={handleImageUrlChange} value={imageUrl}/>
+                            <Form.Control type="text" placeholder="Ingresar url de imagen" onChange={handleImageUrlChange} value={imageUrl} />
                         </Form.Group>
                     </Row>
-                    <Row className="justify-content-end">
+                    <Row className="justify-content-between">
+                        <Col md={6} className="d-flex align-items-end">
+                            <Button variant="light" onClick={handleBack}>
+                                Volver
+                            </Button>
+                        </Col>
                         <Col md={3} className="d-flex flex-column justify-content-end align-items-end">
                             <Form.Check
                                 type="switch"
@@ -132,6 +125,5 @@ const NewBook = ({onBookAdded}) => {
         </Card>
     );
 };
-
 
 export default NewBook;
