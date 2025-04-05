@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import BookItem from "../bookItem/BookItem";
-import BookSearch from "../bookSearch/BookSearch"; 
+import BookSearch from "../bookSearch/BookSearch";
 
-const Books = ({ books }) => {
-  
+const Books = ({ books, onDeleteBook }) => {
   const [search, setSearch] = useState("");
 
   const filteredBooks = books.filter((book) =>
@@ -12,11 +11,9 @@ const Books = ({ books }) => {
 
   return (
     <div>
-      <div>
-        <BookSearch search={search} setSearch={setSearch} /> 
-      </div>
+      <BookSearch search={search} setSearch={setSearch} />
       <div className="d-flex justify-content-center flex-wrap">
-        {filteredBooks.map((book) => ( 
+        {filteredBooks.map((book) => (
           <BookItem
             key={book.id}
             bookTitle={book.title}
@@ -25,6 +22,7 @@ const Books = ({ books }) => {
             pages={book.pageCount}
             imageUrl={book.imageUrl}
             available={book.available}
+            onDelete={() => onDeleteBook(book.id)}
           />
         ))}
       </div>
