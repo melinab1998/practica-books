@@ -1,22 +1,44 @@
-import React, { useState } from "react";
-import booksInitials from "../../../data/Data";
+import React, { useEffect, useState } from "react";
 import Books from "../books/Books"
 import NewBook from "../newBook/NewBook";
 import { useNavigate } from "react-router";
 import { Routes, Route } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import BookDetails from "../bookDetails/BookDetails";
+import { errorToast, successToast } from "../../../utils/notifications";
 
 const Dashboard = ({ onLogout }) => {
     const navigate = useNavigate();
-    const [bookList, setBookList] = useState(booksInitials);
+    const [bookList, setBookList] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/books")
+        .then(res => res.json())
+        .then(data => setBookList([...data]))
+        .catch(err => console.log(err));
+    }, []);
+
 
     const handleBookAdded = (enteredBook) => {
-        const bookData = {
-            ...enteredBook,
-            id: Math.random(),
-        };
-        setBookList((prevBookList) => [bookData, ...prevBookList]);
+
+        if(!enteredBook.title || !enteredBook.author){
+            errorToast("El autor y/o título son requeridos");
+            return ;
+        }
+        
+        fetch("http://localhost:3000/books", {
+            headers: {
+                "Content-type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify(enteredBook)
+        })
+            .then(res => res.json())
+            .then(data => {
+                setBookList(prevBookList => [data, ...prevBookList])
+                successToast(`¡Libro ${data.title} agregado correctamente!`)
+            })
+            .catch(err => console.log(err))
     };
 
     const handleDeleteBook = (id) => {
