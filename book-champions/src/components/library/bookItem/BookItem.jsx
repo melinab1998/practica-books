@@ -20,8 +20,6 @@ const BookItem = ({
     const navigate = useNavigate();
     const maxStars = 5;
 
-    const handleTitle = () => setTitle("Título Actualizado!");
-
     const handleDelete = () => {
         onDelete();
         setShowModal(false);

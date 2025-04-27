@@ -69,6 +69,24 @@ const Dashboard = ({ onLogout }) => {
         navigate("/library/add-book", { replace: true });
     };
 
+    const handleDeleteBook = (bookId, bookTitle) => {
+        fetch(`http://localhost:3000/books/${bookId}`, {
+            method: "DELETE"
+        })
+            .then(res => {
+                if (res.ok) {
+                    setBookList(prevBooks => prevBooks.filter(book => book.id !== bookId));
+                    successToast(`¡Libro "${bookTitle}" eliminado correctamente!`);
+                } else {
+                    errorToast("Error al eliminar el libro.");
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                errorToast("Error de red al intentar eliminar el libro.");
+            });
+    };
+
     return (
         <div className="p-4">
             <div className="d-flex justify-content-end mb-3">
@@ -85,7 +103,7 @@ const Dashboard = ({ onLogout }) => {
                 <p>¡Quiero leer libros!</p>
 
                 <Routes>
-                    <Route index element={<Books books={bookList} />} />
+                    <Route index element={<Books books={bookList} onDeleteBook={handleDeleteBook} />} />
                     <Route path="/:id" element={<BookDetails onBookUpdated={handleBookUpdated} />} />
                     <Route path="add-book" element={<BookForm onBookAdded={handleBookAdded} />} />
                 </Routes>

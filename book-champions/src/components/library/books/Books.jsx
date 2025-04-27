@@ -24,7 +24,7 @@ const Books = ({ books, onDeleteBook }) => {
             imageUrl={book.imageUrl}
             available={book.available}
             summary={book.summary} 
-            onDelete={() => onDeleteBook(book.id)}
+            onDelete={() => onDeleteBook(book.id, book.title)}
           />
         ))}
       </div>
