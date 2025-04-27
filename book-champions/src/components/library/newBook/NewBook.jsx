@@ -10,6 +10,7 @@ const NewBook = ({ onBookAdded }) => {
     const [rating, setRating] = useState("");
     const [pageCount, setPageCount] = useState("");
     const [imageUrl, setImageUrl] = useState("");
+    const [summary, setSummary] = useState("");
     const [available, setAvailable] = useState(false);
 
     const handleChangeTitle = (event) => setTitle(event.target.value);
@@ -18,6 +19,7 @@ const NewBook = ({ onBookAdded }) => {
     const handlePageCountChange = (event) => setPageCount(event.target.value);
     const handleImageUrlChange = (event) => setImageUrl(event.target.value);
     const handleAvailabilityChange = (event) => setAvailable(event.target.checked);
+    const handleSummaryChange = (event) => setSummary(event.target.value);
 
     const handleAddBook = (event) => {
         event.preventDefault();
@@ -29,6 +31,7 @@ const NewBook = ({ onBookAdded }) => {
             pageCount: parseInt(pageCount, 10),
             imageUrl,
             available,
+            summary,
         };
 
         console.log(bookData);
@@ -40,6 +43,7 @@ const NewBook = ({ onBookAdded }) => {
         setRating("");
         setPageCount("");
         setImageUrl("");
+        setSummary("");
         setAvailable(false);
 
         navigate("/library", { replace: true });
@@ -98,6 +102,18 @@ const NewBook = ({ onBookAdded }) => {
                         <Form.Group className="mb-3" controlId="imageUrl">
                             <Form.Label>URL de imagen</Form.Label>
                             <Form.Control type="text" placeholder="Ingresar url de imagen" onChange={handleImageUrlChange} value={imageUrl} />
+                        </Form.Group>
+                    </Row>
+                    <Row>
+                        <Form.Group className="mb-3" controlId="summary">
+                            <Form.Label>Resumen</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="Ingresar resumen del libro"
+                                onChange={handleSummaryChange}
+                                value={summary}
+                            />
                         </Form.Group>
                     </Row>
                     <Row className="justify-content-between">
