@@ -47,12 +47,20 @@ const Login = ({ onLogin }) => {
     method: "POST",
     body: JSON.stringify({email, password})
     })
-    .then(res => res.json())
+    .then(async res => {
+      if(!res.ok){
+        const errData = await res.json();
+        throw new Error(errData.message || "Algo ha salido mal");
+      }
+      return res.json();
+    })
     .then(token => {
       localStorage.setItem("book-champions-token", token)
       navigate("/library");
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      errorToast(err.message)
+    })
   };
 
   return (
