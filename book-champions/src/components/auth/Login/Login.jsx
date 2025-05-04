@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { Button, Col, Form, FormGroup, Row } from "react-bootstrap";
 import { useNavigate, Link } from "react-router";
 import AuthContainer from "../../AuthContainer/AuthContainer"
+import { validateEmail, validatePassword } from "../auth.services";
+import { errorToast} from "../../../utils/notifications.js"
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -25,17 +27,18 @@ const Login = ({ onLogin }) => {
     event.preventDefault();
 
 
-    if (!emailRef.current.value.length) {
+    if (!emailRef.current.value.length || !validateEmail(email)) {
       setErrors({ ...errors, email: true });
-      alert("¡Email vacío!");
+      errorToast("¡Email incorrecto!");
       emailRef.current.focus();
       return;
-    } else if (!password.length || password.length < 7) {
+    } else if (!password.length || !validatePassword(password, 7, null, true, true)) {
       setErrors({ ...errors, password: true });
-      alert("¡Password vacío o menor a 7 caracteres!");
+      errorToast("¡Password incorrecto!")
       passwordRef.current.focus();
       return;
     }
+    setErrors({email: false, password: false})
     onLogin();
     fetch("http://localhost:3000/login", {
       headers: {
