@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { successToast } from "../../../utils/notifications.js";
-
+import { successToast, errorToast } from "../../../utils/notifications.js";
 
 const BookForm = ({ isEditing = false, book = {}, onBookSaved }) => {
     const navigate = useNavigate();
@@ -29,18 +28,18 @@ const BookForm = ({ isEditing = false, book = {}, onBookSaved }) => {
 
     const handleAddBook = (event) => {
         event.preventDefault();
-    
+
         if (!formData.title || !formData.author) {
             errorToast("El título y autor son requeridos");
             return;
         }
-    
+
         const bookData = {
             ...formData,
             rating: parseInt(formData.rating, 10),
             pageCount: parseInt(formData.pageCount, 10)
         };
-    
+
         fetch("http://localhost:3000/books", {
             headers: {
                 "Content-Type": "application/json",
@@ -50,9 +49,7 @@ const BookForm = ({ isEditing = false, book = {}, onBookSaved }) => {
             body: JSON.stringify(bookData)
         })
         .then(res => {
-            if (!res.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
+            if (!res.ok) throw new Error('Error en la respuesta del servidor');
             return res.json();
         })
         .then(data => {
@@ -67,14 +64,14 @@ const BookForm = ({ isEditing = false, book = {}, onBookSaved }) => {
 
     const handleSaveBook = (event) => {
         event.preventDefault();
-    
+
         const bookData = {
             ...formData,
             id: book.id,
             rating: parseInt(formData.rating, 10),
             pageCount: parseInt(formData.pageCount, 10)
         };
-    
+
         fetch(`http://localhost:3000/books/${book.id}`, {
             headers: {
                 "Content-Type": "application/json",
@@ -83,23 +80,18 @@ const BookForm = ({ isEditing = false, book = {}, onBookSaved }) => {
             method: "PUT",
             body: JSON.stringify(bookData)
         })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Error al actualizar el libro');
-                }
-                return res.json();
-            })
-            .then(updatedBook => {
-                if (onBookSaved) {
-                    onBookSaved(updatedBook);
-                }
-                // Opcional: mostrar mensaje de éxito
-                console.log("Libro actualizado correctamente");
-            })
-            .catch(err => {
-                console.error("Error al actualizar:", err);
-                // Opcional: mostrar mensaje de error al usuario
-            });
+        .then(res => {
+            if (!res.ok) throw new Error('Error al actualizar el libro');
+            return res.json();
+        })
+        .then(updatedBook => {
+            if (onBookSaved) onBookSaved(updatedBook);
+            navigate("/library", { replace: true }); 
+        })
+        .catch(err => {
+            console.error("Error al actualizar:", err);
+            errorToast("Error al actualizar el libro");
+        });
     };
 
     const handleBack = () => {
