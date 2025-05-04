@@ -54,7 +54,10 @@ const BookDetails = ({ onBookUpdated }) => {
                 <Card.Img
                     height={500}
                     variant="top"
-                    src={book?.imageUrl !== "" ? book?.imageUrl : "https://bit.ly/47NylZk"}
+                    src={book?.imageUrl ? book.imageUrl : "https://bit.ly/47NylZk"}
+                    onError={(e) => {
+                        e.target.src = "https://bit.ly/47NylZk";
+                    }}
                 />
                 <Card.Body>
                     <div className="mb-2">

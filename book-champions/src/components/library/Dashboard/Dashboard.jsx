@@ -34,21 +34,28 @@ const Dashboard = ({ onLogout }) => {
             errorToast("El autor y/o título son requeridos");
             return;
         }
-
+    
         fetch("http://localhost:3000/books", {
             headers: {
-                "Content-type": "application/json"
+                "Content-type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("book-champions-token")}`
             },
             method: "POST",
             body: JSON.stringify(enteredBook)
         })
-            .then(res => res.json())
-            .then(data => {
-                setBookList(prevBookList => [data, ...prevBookList]);
-                successToast(`¡Libro ${data.title} agregado correctamente!`);
-                navigate("/library", { replace: true });
-            })
-            .catch(err => console.log(err));
+        .then(res => res.json())
+        .then(data => {
+            // Actualiza el estado localmente para mejor rendimiento
+            setBookList(prev => [data, ...prev]);
+            successToast(`¡Libro "${data.title}" agregado correctamente!`);
+            navigate("/library", { replace: true });
+        })
+        .catch(err => {
+            console.error("Error al agregar libro:", err);
+            errorToast("Error al agregar el libro");
+            // Opcional: hacer fetch completo para asegurar consistencia
+            fetchBooks();
+        });
     };
 
     const handleBookUpdated = (updatedBook) => {
@@ -71,20 +78,25 @@ const Dashboard = ({ onLogout }) => {
 
     const handleDeleteBook = (bookId, bookTitle) => {
         fetch(`http://localhost:3000/books/${bookId}`, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("book-champions-token")}`
+            }
         })
-            .then(res => {
-                if (res.ok) {
-                    setBookList(prevBooks => prevBooks.filter(book => book.id !== bookId));
-                    successToast(`¡Libro "${bookTitle}" eliminado correctamente!`);
-                } else {
-                    errorToast("Error al eliminar el libro.");
-                }
-            })
-            .catch(err => {
-                console.log(err);
-                errorToast("Error de red al intentar eliminar el libro.");
-            });
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Error al eliminar el libro');
+            }
+            return res.json();
+        })
+        .then(() => {
+            setBookList(prevBooks => prevBooks.filter(book => book.id !== bookId));
+            successToast(`¡Libro "${bookTitle}" eliminado correctamente!`);
+        })
+        .catch(err => {
+            console.error("Error al eliminar:", err);
+            errorToast("Error al eliminar el libro");
+        });
     };
 
     return (

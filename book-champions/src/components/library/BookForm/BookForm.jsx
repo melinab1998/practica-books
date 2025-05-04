@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { successToast } from "../../../utils/notifications.js";
 
-const BookForm = ({ onBookAdded, isEditing = false, book = {}, onBookSaved }) => {
+
+const BookForm = ({ isEditing = false, book = {}, onBookSaved }) => {
     const navigate = useNavigate();
 
     const defaultBook = {
@@ -27,45 +29,77 @@ const BookForm = ({ onBookAdded, isEditing = false, book = {}, onBookSaved }) =>
 
     const handleAddBook = (event) => {
         event.preventDefault();
-
+    
         if (!formData.title || !formData.author) {
-            return; 
+            errorToast("El título y autor son requeridos");
+            return;
         }
-
+    
         const bookData = {
             ...formData,
             rating: parseInt(formData.rating, 10),
             pageCount: parseInt(formData.pageCount, 10)
         };
-
-        onBookAdded(bookData);
+    
+        fetch("http://localhost:3000/books", {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("book-champions-token")}`
+            },
+            method: "POST",
+            body: JSON.stringify(bookData)
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return res.json();
+        })
+        .then(data => {
+            successToast(`¡Libro "${data.title}" agregado correctamente!`);
+            navigate("/library", { replace: true });
+        })
+        .catch(err => {
+            console.error("Error al agregar libro:", err);
+            errorToast("Error al agregar el libro");
+        });
     };
 
     const handleSaveBook = (event) => {
         event.preventDefault();
-
+    
         const bookData = {
             ...formData,
             id: book.id,
             rating: parseInt(formData.rating, 10),
             pageCount: parseInt(formData.pageCount, 10)
         };
-
+    
         fetch(`http://localhost:3000/books/${book.id}`, {
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("book-champions-token")}`
             },
             method: "PUT",
             body: JSON.stringify(bookData)
         })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('Error al actualizar el libro');
+                }
+                return res.json();
+            })
             .then(updatedBook => {
                 if (onBookSaved) {
                     onBookSaved(updatedBook);
                 }
-                navigate("/library", { replace: true });
+                // Opcional: mostrar mensaje de éxito
+                console.log("Libro actualizado correctamente");
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.error("Error al actualizar:", err);
+                // Opcional: mostrar mensaje de error al usuario
+            });
     };
 
     const handleBack = () => {
