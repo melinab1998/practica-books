@@ -17,6 +17,7 @@ function App() {
 
   const handleLogOut = () => {
     setLoggedIn(false);
+    localStorage.removeItem("book-champions-token");
   };
 
   return (

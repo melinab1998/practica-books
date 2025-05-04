@@ -24,6 +24,7 @@ const Login = ({ onLogin }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+
     if (!emailRef.current.value.length) {
       setErrors({ ...errors, email: true });
       alert("¡Email vacío!");
@@ -35,10 +36,20 @@ const Login = ({ onLogin }) => {
       passwordRef.current.focus();
       return;
     }
-
-    alert(`El email ingresado es: ${email} y el password es ${password}`);
     onLogin();
-    navigate("/library");
+    fetch("http://localhost:3000/login", {
+      headers: {
+        "Content-type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify({email, password})
+    })
+    .then(res => res.json())
+    .then(token => {
+      localStorage.setItem("book-champions-token", token)
+      navigate("/library");
+    })
+    .catch(err => console.log(err))
   };
 
   return (
