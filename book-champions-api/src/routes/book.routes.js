@@ -1,17 +1,18 @@
 import {Router} from "express";
 import {createBook, deleteBook, findBook, findBooks, updateBook } from "../services/book.services.js"
+import { verifyToken } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/books", findBooks);
+router.get("/books", verifyToken, findBooks);
 
-router.get("/books/:id", findBook);
+router.get("/books/:id", verifyToken, findBook);
 
-router.post("/books",createBook);
+router.post("/books", verifyToken, createBook);
 
-router.put("/books/:id", updateBook);
+router.put("/books/:id", verifyToken,  updateBook);
 
-router.delete("/books/:id", deleteBook);
+router.delete("/books/:id", verifyToken, deleteBook);
 
 
 export default router;

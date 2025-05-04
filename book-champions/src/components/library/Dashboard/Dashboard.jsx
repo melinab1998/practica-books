@@ -12,12 +12,12 @@ const Dashboard = ({ onLogout }) => {
     const location = useLocation();
     const [bookList, setBookList] = useState([]);
 
-    useEffect(() => {
-        fetchBooks();
-    }, []);
-
     const fetchBooks = () => {
-        fetch("http://localhost:3000/books")
+        fetch("http://localhost:3000/books", {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("book-champions-token")}`
+            }
+        })
             .then(res => res.json())
             .then(data => setBookList([...data]))
             .catch(err => console.log(err));
