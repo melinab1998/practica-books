@@ -56,7 +56,7 @@ export const loginUser = async (req, res) => {
         }
 
         const secretKey = "programacion3-2025";
-        const token = jwt.sign({ email }, secretKey, { expiresIn: "1h" });
+        const token = jwt.sign({ email }, secretKey, { expiresIn: 60 });
 
         return res.json(token);
     } catch (error) {

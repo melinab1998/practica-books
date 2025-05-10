@@ -1,3 +1,5 @@
+import {jwtDecode} from "jwt-decode"
+
 export const validateString = (str, minLenght, maxLength) => {
     if(minLenght && str.length < minLenght)
         return false;
@@ -60,3 +62,15 @@ export const validateRegisterUser = ({ name, email, password }) => {
 
     return result;
 };
+
+export const isTokenValid = (token) => {
+    if (!token) return false;
+    try{
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        return currentTime < decodedToken.exp;
+    } catch(error){
+        console.log('Error decoding token:', error);
+        return false;
+    }
+}

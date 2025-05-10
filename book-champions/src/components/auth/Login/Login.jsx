@@ -1,17 +1,21 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Button, Col, Form, FormGroup, Row } from "react-bootstrap";
 import { useNavigate, Link } from "react-router";
 import AuthContainer from "../../AuthContainer/AuthContainer"
 import { validateEmail, validatePassword } from "../auth.services";
-import { errorToast} from "../../../utils/notifications.js"
+import { errorToast } from "../../../utils/notifications.js"
+import { loginUser } from "../../library/Dashboard/Dashboard.services.js";
+import { AuthenticationContext } from "../../services/auth/auth.context.jsx";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const [errors, setErrors] = useState({ email: false, password: false });
   const navigate = useNavigate();
+
+  const { handleUserLogin } = useContext(AuthenticationContext);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -38,29 +42,16 @@ const Login = ({ onLogin }) => {
       passwordRef.current.focus();
       return;
     }
-    setErrors({email: false, password: false})
-    onLogin();
-    fetch("http://localhost:3000/login", {
-      headers: {
-        "Content-type": "application/json"
-    },
-    method: "POST",
-    body: JSON.stringify({email, password})
-    })
-    .then(async res => {
-      if(!res.ok){
-        const errData = await res.json();
-        throw new Error(errData.message || "Algo ha salido mal");
+    setErrors({ email: false, password: false })
+    loginUser(email, password,
+      (token) => {
+        handleUserLogin(token)
+        navigate("/library");
+      },
+      (err) => {
+        errorToast(err.message);
       }
-      return res.json();
-    })
-    .then(token => {
-      localStorage.setItem("book-champions-token", token)
-      navigate("/library");
-    })
-    .catch(err => {
-      errorToast(err.message)
-    })
+    );
   };
 
   return (

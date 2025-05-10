@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Books from "../books/Books";
 import BookForm from "../BookForm/BookForm";
 import { useNavigate, useLocation } from "react-router";
@@ -7,12 +7,14 @@ import { Button } from "react-bootstrap";
 import BookDetails from "../bookDetails/BookDetails";
 import { errorToast, successToast } from "../../../utils/notifications.js";
 import { getBooks, addBook, deleteBook } from "./Dashboard.services.js";
+import { AuthenticationContext } from "../../services/auth/auth.context";
 
-const Dashboard = ({ onLogout }) => {
-    
+const Dashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [bookList, setBookList] = useState([]);
+
+    const { handleUserLogout } = useContext(AuthenticationContext);
 
     const fetchBooks = () => {
         getBooks(
@@ -61,7 +63,7 @@ const Dashboard = ({ onLogout }) => {
     };
 
     const handleLogout = () => {
-        onLogout();
+        handleUserLogout(); // cerramos sesión desde el contexto
         navigate("/login");
     };
 

@@ -47,3 +47,22 @@ export const deleteBook = (bookId, onSuccess, onError) => {
     .then(onSuccess)
     .catch(onError)
 };
+
+export const loginUser = (email, password, onSuccess, onError) => {
+    fetch(`${baseUrl}/login`, {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+    })
+    .then(async res => {
+        if (!res.ok) {
+            const errData = await res.json();
+            throw new Error(errData.message || "Algo ha salido mal");
+        }
+        return res.json();
+    })
+    .then(onSuccess)
+    .catch(onError);
+};
