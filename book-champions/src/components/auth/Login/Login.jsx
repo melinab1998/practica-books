@@ -6,6 +6,7 @@ import { validateEmail, validatePassword } from "../auth.services";
 import { errorToast } from "../../../utils/notifications.js"
 import { loginUser } from "../../library/Dashboard/Dashboard.services.js";
 import { AuthenticationContext } from "../../services/auth/auth.context.jsx";
+import ToggleTheme from "../../services/theme/ToggleTheme"
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -56,6 +57,9 @@ const Login = () => {
 
   return (
     <AuthContainer>
+      <div className="d-flex justify-content-end">
+        <ToggleTheme /> 
+      </div>
       <Form onSubmit={handleSubmit}>
         <FormGroup className="mb-4">
           <Form.Control

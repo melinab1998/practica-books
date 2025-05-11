@@ -8,6 +8,7 @@ import BookDetails from "../bookDetails/BookDetails";
 import { errorToast, successToast } from "../../../utils/notifications.js";
 import { getBooks, addBook, deleteBook } from "./Dashboard.services.js";
 import { AuthenticationContext } from "../../services/auth/auth.context";
+import ToggleTheme from "../../services/theme/ToggleTheme"
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -88,6 +89,9 @@ const Dashboard = () => {
     return (
         <div className="p-4">
             <div className="d-flex justify-content-end mb-3">
+                <div className="d-flex justify-content-end">
+                    <ToggleTheme />
+                </div>
                 <Button variant="primary" className="me-2" onClick={handleNavigateAddBook}>
                     Agregar libro
                 </Button>
