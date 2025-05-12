@@ -7,8 +7,11 @@ import { errorToast } from "../../../utils/notifications.js"
 import { loginUser } from "../../library/Dashboard/Dashboard.services.js";
 import { AuthenticationContext } from "../../services/auth/auth.context.jsx";
 import ToggleTheme from "../../services/theme/ToggleTheme"
+import {useTranslate} from "../../../custom/useTranslate/useTranslate.jsx"
+import ComboLanguage from "../../ComboLanguage/ComboLanguage.jsx";
 
 const Login = () => {
+  const translate = useTranslate(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const emailRef = useRef(null);
@@ -57,35 +60,36 @@ const Login = () => {
 
   return (
     <AuthContainer>
-      <div className="d-flex justify-content-end">
-        <ToggleTheme /> 
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <ComboLanguage /> 
+        <ToggleTheme />
       </div>
       <Form onSubmit={handleSubmit}>
         <FormGroup className="mb-4">
           <Form.Control
             type="email"
             ref={emailRef}
-            placeholder="Ingresar email"
+            placeholder={translate("email")} 
             className={errors.email ? "border border-danger" : ""}
             onChange={handleEmailChange}
             value={email}
           />
           {errors.email && (
-            <p className="text-danger mt-1 mb-0">Debes ingresar un email para iniciar sesión.</p>
+            <p className="text-danger mt-1 mb-0">{translate("email_empty")}</p> 
           )}
         </FormGroup>
         <FormGroup className="mb-4">
           <Form.Control
             type="password"
             ref={passwordRef}
-            placeholder="Ingresar contraseña"
+            placeholder={translate("password")} 
             className={errors.password ? "border border-danger" : ""}
             onChange={handlePasswordChange}
             value={password}
           />
           {errors.password && (
             <p className="text-danger mt-1 mb-0">
-              Debes ingresar una contraseña de al menos 7 caracteres.
+              {translate("password_empty")} 
             </p>
           )}
         </FormGroup>
@@ -93,18 +97,21 @@ const Login = () => {
           <Col />
           <Col md={6} className="d-flex justify-content-end">
             <Button variant="secondary" type="submit">
-              Iniciar sesión
+              {translate("login")} 
             </Button>
           </Col>
         </Row>
       </Form>
 
       <div className="text-center mt-4">
-        <p className="mb-2">¿Aún no tienes cuenta?</p>
-        <Link to="/register"><Button variant="primary">Registrarse</Button></Link>
+        <p className="mb-2">{translate("login_no_account")}</p> 
+        <Link to="/register">
+          <Button variant="primary">{translate("register")}</Button> 
+        </Link>
       </div>
     </AuthContainer>
   );
 };
+
 
 export default Login;
